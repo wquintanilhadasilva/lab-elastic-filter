@@ -33,6 +33,15 @@ public class Api {
         return ResponseEntity.ok(ret);
     }
 
+    @GetMapping("/p/{id}")
+    public ResponseEntity<List<RequisicaoDto>> getByIdProjection(@PathVariable("id") String requestId) {
+        log.info("projection [{}]", requestId);
+        var r = repository.findByRequestId(requestId);
+        var ret = r.stream().map(p -> new RequisicaoDto(p.getId(), p.getRequestId(), p.getRequests().stream().toList())
+                ).toList();
+        return ResponseEntity.ok(ret);
+    }
+
     @GetMapping("/q/{id}")
     public ResponseEntity<List<RequisicaoDto>> queryById(@PathVariable("id") String requestId) {
         log.info("query [{}]", requestId);
